@@ -22,6 +22,10 @@ RUN printf 'Package: nodejs\nPin: origin deb.nodesource.com\nPin-Priority: 1001'
     yarn \
     unzip \
   && apt-get upgrade -qq \
+  && curl --insecure -OL https://repo1.maven.org/maven2/org/sonarsource/scanner/cli/sonar-scanner-cli/5.0.1.3006/sonar-scanner-cli-5.0.1.3006.zip \
+  && unzip sonar-scanner-cli-5.0.1.3006.zip \
+  && mv sonar-scanner-5.0.1.3006/bin/sonar-scanner /usr/bin/sonar-scanner \
+  && rm -rf  sonar-scanner* \
   && rm -rf /var/lib/apt/lists/*
 
 
