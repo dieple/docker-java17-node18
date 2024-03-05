@@ -2,7 +2,8 @@ FROM eclipse-temurin:17-jdk
 
 ARG REFRESHED_AT
 ENV REFRESHED_AT $REFRESHED_AT
-ARG NODE_MAJOR=18
+ARG NODE_MAJOR=16
+ARG SONARQUBE_HOST_URL
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -21,11 +22,13 @@ RUN printf 'Package: nodejs\nPin: origin deb.nodesource.com\nPin-Priority: 1001'
     nodejs \
     yarn \
     unzip \
+    git \
   && apt-get upgrade -qq \
   && curl --insecure -OL https://repo1.maven.org/maven2/org/sonarsource/scanner/cli/sonar-scanner-cli/5.0.1.3006/sonar-scanner-cli-5.0.1.3006.zip \
   && unzip sonar-scanner-cli-5.0.1.3006.zip \
-  && mv sonar-scanner-5.0.1.3006/bin/sonar-scanner /usr/bin/sonar-scanner \
-  && rm -rf  sonar-scanner* \
+  && mv sonar-scanner-cli-5.0.1.3006.zip sonar-scanner \
+  && echo 'export PATH=$PATH:/sonar-scanner/bin' >> /root/.bashrc \
+  && echo 'sonar.host.url=$SONARQUBE_HOST_URL' >> /sonar-scanner/conf/sonar-scanner.properties \
   && rm -rf /var/lib/apt/lists/*
 
 
